@@ -10,8 +10,8 @@ ClimbUp will be a social media app focusing on sharing climbing information, sch
 ### Technologies used
 
 * Django 3.1
-* VueJS
-* Bootstrap
+* VueJS 3.0
+* Bootstrap v5.0
 
 ## Features
 ------
@@ -42,6 +42,7 @@ ClimbUp will be a social media app focusing on sharing climbing information, sch
   * scheduled_date (datetimefield)
 * User (extends built-in user)
   * profile picture (ImageField)
+  * city(foreignkey to City )
 
 ## Pages
 -------
@@ -56,13 +57,22 @@ ClimbUp will be a social media app focusing on sharing climbing information, sch
     - log-out link if logged in
 - New Post
   - form with all the Post model fields
-  - image field 
-  - location field
+  - image field for uploading photos to posts 
+  - city field
 - Post Detail
   - edit post
   - delete post
     - stretch- comment on post
-
+- Registration
+  -user registration form using django forms
+  -imagefield for profile picture
+- Login
+  - login form
+  - welcome message displaying on main page after redirect
+- Profile page
+  - display users posts chronologically
+  - fixed navbar at top displaying current page and current user
+  - fixed sidenav with new post link, homepage link, notifications, logout
 ## Schedule
 ----
 * Week 1
