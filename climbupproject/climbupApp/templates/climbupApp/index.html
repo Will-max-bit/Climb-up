@@ -1,0 +1,47 @@
+{% extends 'climbupApp/base.html'%}
+
+{% block content %}
+<div id="app">
+    [[ message ]]
+    <div class="my-3 mx-1" id="card" v-for="post in vue_posts" style="width: 18rem;">
+        <img v-bind:src="[[post.post_image]]" class="card-img-top" alt="...">
+        <div class="card-body">
+            <div>Author- [[ post.author]]</div>
+            <div>Location- [[post.city]]</div>
+            <div>posted- [[post.created_date]]</div>
+            <hr>
+            
+            <h5 class="card-title">[[post.title]]</h5>
+            <p class="card-text">
+                [[post.text]]
+            </p>
+        </div>
+    </div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+<script>
+    let app = new Vue({
+        el: '#app',
+        delimiters: ['[[', ']]'],
+        data: {
+            vue_posts: [],
+            message: 'index'
+        },
+        methods: {
+            postIndex: function () {
+                axios({
+                    url: "{% url 'climbupApp:load_posts' %}",
+                    method: 'get',
+                }).then(response => {
+                    this.vue_posts = response.data.posts
+                    console.log(response.data)
+                })
+            }
+        },
+        created: function () {
+            this.postIndex()
+        }
+    })
+</script>
+{% endblock %}
