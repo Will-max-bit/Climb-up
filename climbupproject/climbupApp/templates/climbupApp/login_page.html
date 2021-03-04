@@ -1,0 +1,25 @@
+{% extends 'climbupApp/base.html'%}
+{% load crispy_forms_tags %}
+{% block content %}
+
+<h1> test </h1>
+<form action="" method="post">
+{% csrf_token %}
+  <div class="mb-3">
+    <label for="username"  class="form-label">username</label>
+    <input type="username" name="username" class="form-control" id="username1">
+  </div>
+  {% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+    <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+    {% endfor %}
+</ul>
+{% endif %}
+  <div class="mb-3">
+    <label for="password"  class="form-label">Password</label>
+    <input type="password" name="password" class="form-control" id="Password1">
+  </div>
+  <button type="submit" class="btn btn-primary">Sign In</button>
+</form>
+{% endblock %}

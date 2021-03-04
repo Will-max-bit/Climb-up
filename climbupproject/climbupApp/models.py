@@ -1,7 +1,8 @@
 from django.db import models
-from django.db import models
 from django.utils import timezone
-from django.contrib.auth.models import AbstractUser
+from django.conf import settings
+from django.contrib.auth.models import User
+
 
 # Create your models here.
 
@@ -15,12 +16,7 @@ class City(models.Model):
 
 
 
-class User(AbstractUser):
-    profile_image = models.ImageField(upload_to='profile_images/', null=True, blank=True)
-    city = models.ForeignKey(City, on_delete=models.PROTECT, related_name='users', null=True)
 
-    def __str__(self):
-        return self.username
     
 
 

@@ -18,20 +18,38 @@
 <body>
     <div class="container">
         <h1 class="text-center">ClimbUp</h1>
-        <h4>Welcome- </h4>
+        <h4>Welcome- {{user.username}}</h4>
         <div class="row align-items-start">
             <ul class="nav flex-column">
                 <li class="nav-item">
                     <a class="nav-link active" href="{% url 'climbupApp:index'%}">Homepage</a>
                 </li>
+                {% if user.is_authenticated %}
                 <li class="nav-item">
                     <a class="nav-link" href="{% url 'climbupApp:profile_page' %}">Profile</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="#">New Post</a>
                 </li>
-                
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'climbupApp:logout_user' %}">Log out</a>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'climbupApp:register' %}">register</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'climbupApp:login_page' %}">Log In</a>
+                </li>
+                {% endif %}
             </ul>
+            {% if messages %}
+            <ul class='messages'>
+                {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+                    {% endfor %}
+            </ul>
+            {% endif %}
             {% block content%}
             {% endblock %}
         </div>

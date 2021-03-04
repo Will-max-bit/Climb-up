@@ -37,7 +37,30 @@
                     this.vue_posts = response.data.posts
                     console.log(response.data)
                 })
+            }, post_new: function(){
+                axios({
+                    url: "{% url 'climbupApp:post_new' %}",
+                    method: "post",
+                    data: {
+                        title: this.title,
+                        text: this.text,
+                        post_image: this.post_image,
+                        city: this.city,
+                        author: this.author,
+                        attendees: this.attendees,
+                        likes: this.likes,
+                        created_date: this.created_date,
+                        scheduled_date = this.scheduled_date,
+                    },
+                    headers: {
+                        "X-CSRFToken": "{{ csrf_token }}"
+                    }
+                }).then(response => {
+                    console.log(response.data)
+                    this.postIndex()
+                })
             }
+
         },
         created: function () {
             this.postIndex()
