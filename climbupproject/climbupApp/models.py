@@ -15,11 +15,6 @@ class City(models.Model):
     
 
 
-
-
-    
-
-
 class Post(models.Model):
     title = models.CharField(max_length=60)
     text = models.TextField()

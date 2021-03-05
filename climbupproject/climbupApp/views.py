@@ -18,7 +18,7 @@ def index(request):
 # provides the data to be rendered on the home page
 def load_posts(request):
     # getting posts out of database
-    posts = Post.objects.all()
+    posts = Post.objects.all().order_by('-created_date')
     post_data = []
     for post in posts:
         post_data.append({
@@ -73,9 +73,6 @@ def register(request):
             user = form.save()
             profile_image = form.cleaned_data['image']
             user = authenticate(username=form.cleaned_data['username'], password = form.cleaned_data['password1'])
-            # user_profile = User(user = user, profile_image = profile_image)
-            # user_profile.save()
-
             messages.success(request, f'Account created for{user.username}')
             login(request, user)
             return redirect('climbupApp:index')
@@ -89,22 +86,37 @@ def logout_user(request):
     logout(request)
     return redirect('climbupApp:index')
 
-@login_required
-def post_new(request):
-    post_data = json.loads(request.body)
-    title = post_data['title']
-    text = post_data['text']
-    post_image = post_data['post_image']
-    city = post_data['city']
-    author = post_data['author']
-    attendees = post_data['attendees']
-    likes = post_data['likes']
-    created_date = post_data['created_date']
-    schedules_date = post_data['scheduled_date']
-    post = Post(title=title, text=text, post_image=post_image, city=city, author=author, attendees=attendees, likes=likes, created_date=created_date, scheduled_date=scheduled_date)
-    post.save()
 
+def post_new(request):
+    # print(request.POST)
+    # print(request.FILES)
+    city_id = request.POST['city_id']
+    created_date = request.POST['created_date'],
+    scheduled_date = request.POST['scheduled_date'],
+    print(created_date)
+    print(scheduled_date)
+    post = Post(
+        title = request.POST['title'],
+        text = request.POST['text'],
+        post_image = request.FILES['post_image'],
+        city = City.objects.get(id=city_id),
+        author = request.user,
+        # created_date = request.POST['created_date'],
+        scheduled_date = request.POST['scheduled_date'],
+    )
+    post.save()
     return HttpResponse('Ok Morty')
+
+    
+def get_cities(request):
+    cities = City.objects.all()
+    city_data = []
+    for city in cities:
+        city_data.append({
+            'name':city.name,
+            'id': city.id,
+        })
+    return JsonResponse({'cities': city_data})
 
 
 
