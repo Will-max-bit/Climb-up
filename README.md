@@ -17,16 +17,16 @@ ClimbUp will be a social media app focusing on sharing climbing information, sch
 ------
 
 - User System
-  - [ ] User sign up form
-  - [ ] User log out
+  - [x] User sign up form
+  - [x] User log out
   - [ ] Update profile
   - [ ] Delete Profile
 - Posts
-  - [ ] Create a post
+  - [x] Create a post
   - [ ] Delete a post
   - [ ] Mark themselves as going to another users post
-- [ ] Public homepage with posts from other users and the user
-- [ ] Profile home page with user's posts, photos, information
+- [x] Public homepage with posts from other users and the user
+- [x] Profile home page with user's posts, photos, information
 
 ## Data Model
 ----
@@ -78,20 +78,23 @@ ClimbUp will be a social media app focusing on sharing climbing information, sch
 ## Schedule
 ----
 * Week 1
-    * create models for Posts
-    * create models for Users
-    * create index template and view
-    * show test posts in page
-    * add forms for new posts, photos & signup
-    * add profile homepage with own users posts
+    * ~~create models for Posts~~
+    * ~~create models for Users~~
+    * ~~create index template and view~~
+    * ~~show test posts in page~~
+    * ~~add forms for new posts, photos & signup~~
+    * ~~add profile homepage with own users posts~~
+    * ~~added modal for adding new city~~
 * Week 2
     * fix issues from week 1
+    * add ability to sort by city in the homepage
+    * add following page to only see other climbers you follow
     * add ability to mark self on other user post
     * Update profile
     * begin styling for readability
     * edit post
     * delete post
-    * like other user post
+    * like other user posts
     * public page with all posts in city of User 
 * Week 3
     * Fix recurring issues from weeks 1/2
