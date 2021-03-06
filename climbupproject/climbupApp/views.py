@@ -118,6 +118,13 @@ def get_cities(request):
         })
     return JsonResponse({'cities': city_data})
 
+def add_city(request):
+    city_name = request.POST['city_add']
+    city = City(
+        name = city_name
+    )
+    city.save()
+    return HttpResponse('Ok Rick')
 
 
 
