@@ -49,6 +49,16 @@ def profile_load(request):
         })
     return JsonResponse({'profile_posts': profile_data})
 
+# def my_city(request):
+#     return render(request, 'climbupApp/my_city.html' )
+
+# def city_load(request):
+#     city_posts = Post.objects.filter()
+
+
+
+
+
 def login_page(request):
     if request.method == 'POST':
         username = request.POST['username']
@@ -124,9 +134,21 @@ def add_city(request):
         name = city_name
     )
     city.save()
-    return HttpResponse('Ok Rick')
+    return HttpResponse('city added')
 
 
+def like_post(request):
+    return HttpResponse('liked')
+    post_id = request.GET['post_id']
+    post = Post.objects.get(id=post_id)
+    user = request.user
+    response = ''
+    if post.liked_by.filter(id=user.id).exists():
+        post.liked_by.remove(user)
+        response = 'liked'
+    else:
+        post.liked_by.add(user)
+        response = 'liked'
 
 
 
