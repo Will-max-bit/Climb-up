@@ -21,11 +21,18 @@
 </head>
 
 <body>
-    <div class="container">
+    <div class="sticky-top ml-20">
         <div class=" m-0">
             <h1 class="text-center">ClimbUp</h1>
             <h4>Welcome- {{user.username}}</h4>
-            <div class="row">
+            {% if messages %}
+                <ul class='messages'>
+                    {% for message in messages %}
+                    <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
+                        {% endfor %}
+                </ul>
+                {% endif %}
+                <div class="row">
                 <ul class="nav flex-column">
                     <li class="nav-item">
                         <a class="nav-link active" href="{% url 'climbupApp:index'%}">Homepage</a>
@@ -49,19 +56,13 @@
                     </li>
                     {% endif %}
                 </ul>
-                {% if messages %}
-                <ul class='messages'>
-                    {% for message in messages %}
-                    <li{% if message.tags %} class="{{ message.tags }}" {% endif %}>{{ message }}</li>
-                        {% endfor %}
-                </ul>
-                {% endif %}
-                {% block content%}
-                {% endblock %}
+                
+                
             </div>
         </div>
     </div>
-
+                {% block content%}
+                {% endblock %}
 </body>
 
 </html>

@@ -2,9 +2,9 @@
 
 {% block content %}
 
-<div id="app" class=".justify-content-end">
+<div id="app" class="container .justify-content">
 
-<!-- Button trigger modal -->
+    
 
   
   <!-- Modal -->
@@ -30,7 +30,7 @@
 
 
 
-    <div>
+    <div class="col">
         <div class="form-group">
             <label for="new_post_form">User</label>
             <input type="title" class="form-control" v-model="title" id="new_post_form" placeholder="What's happening?">
@@ -50,7 +50,7 @@
           </button>
 
     </div>
-    <div class="my-3 mx-1" id="card" v-for="post in vue_posts" style="width: 18rem;">
+    <div class="my-3 mx-1 .justify-content-end" id="card" v-for="post in vue_posts" style="width: 18rem;">
         <img v-bind:src="post.post_image" class="card-img-top" alt="...">
         <div class="card-body">
             <div>Author- [[ post.author]]</div>
@@ -62,8 +62,9 @@
             <p class="card-text">
                 [[post.text]]
             </p>
+          
             <div>likes[[post.likes]]</div>
-            <button type='button' class="btn btn-outline-success btn-floating" data-mdb-ripple-color="dark" v-on:click="likePost(post)">[[post.liked? '★': '☆' ]] <i class="fas fa-star"></i></button>
+            <button type='button' class="btn btn-outline-success btn-floating" data-mdb-ripple-color="dark" v-on:click="likePost(post)">[[post.liked? '👎': '👍' ]]</button>
         </div>
     </div>
 

@@ -1,8 +1,41 @@
 {% extends 'climbupApp/base.html'%}
 {% block content %}
 
-<div id="app">
-    <h1>[[ message ]]</h1>
+<div id="app" class="container ml-30">
+
+
+    <!-- Modal -->
+  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="staticBackdropLabel">Edit Post</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form action="">
+          <input type="title" class="form-control" v-model="title" id="new_post_form" placeholder="What's happening?">
+            <textarea class="form-control" id="post_edit" rows="3"></textarea>
+            <input class="form-control form-control-sm" id="post_image" type="file" accept="image/*" />
+            <button type="button" data-bs-dismiss="modal" class="btn btn-primary">Submit</button>
+            <select class="form-select form-select-sm" v-model="city_id" aria-label=".form-select-sm example">
+            <option selected>Select a City</option>
+            <option v-for="city in cities" v-bind:value="city.id">[[city.name]]</option>
+        </select>
+          </form>
+        </div>
+        <div class="modal-footer">
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+    <h1 class="text-center" >[[ message ]]</h1>
     <div class="my-3 mx-1" id="card" v-for="post in profile_posts" style="width: 18rem;">
         <img v-bind:src="[[post.post_image]]" class="card-img-top" alt="...">
         <div class="card-body">
@@ -16,6 +49,11 @@
                 [[post.text]]
             </p>
         </div>
+      {% if user.is_authenticated %}
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+            edit post
+          </button>
+        {% endif %}
     </div>
 </div>
 
@@ -28,7 +66,9 @@
         delimiters: ['[[', ']]'],
         data: {
             profile_posts: [],
-            message: 'Profile page'
+            message: 'Profile page',
+            modal: null,
+            edit_post: '',
         },
         methods: {
             postIndex: function () {
@@ -43,6 +83,7 @@
         },
         created: function () {
             this.postIndex()
+            this.modal = new bootstrap.Modal(document.querySelector('.modal'), {})
         }
     })
 </script>

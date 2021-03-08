@@ -27,6 +27,6 @@ class Post(models.Model):
     scheduled_date = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
-        return self.title
+        return self.title + 'by' + self.author.username + 'on' + self.created_date.strftime('%b %d %Y')
     
 

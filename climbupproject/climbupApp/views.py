@@ -27,7 +27,7 @@ def load_posts(request):
             'post_image': post.post_image.url,
             'city': post.city.name,
             'author': post.author.username,
-            'created_date': post.created_date
+            'created_date': post.created_date.strftime('%b %d %Y'),
         })
     return JsonResponse({'posts': post_data,})
 
