@@ -57,14 +57,17 @@
             <div>Location- [[post.city]]</div>
             <div>posted- [[post.created_date]]</div>
             <hr>
-
             <h5 class="card-title">[[post.title]]</h5>
             <p class="card-text">
                 [[post.text]]
             </p>
-          
-            <div>likes[[post.likes]]</div>
-            <button type='button' class="btn btn-outline-success btn-floating" data-mdb-ripple-color="dark" v-on:click="likePost(post)">[[post.liked? '👎': '👍' ]]</button>
+            
+            <div>Likes-[[post.likes]]</div>
+            <div>attendants-[[post.attendants]]</div>
+            {% if user.is_authenticated %}
+            <button type='button' class="btn btn-floating" data-mdb-ripple-color="dark" v-on:click="likePost(post)">[[post.liked? '👎': '👍' ]]</button>
+            <button type='button' class='btn btn-floatin' data-mdb-ripple-color='dark' v-on:click="attending(post)">🧗</button>
+            {% endif %}
         </div>
     </div>
 
@@ -99,7 +102,7 @@
                     method: 'get',
                 }).then(response => {
                     this.vue_posts = response.data.posts
-                    console.log(response.data)
+                    console.log( this.vue_posts, 'vue_posts')
                 })
             },
             addCity: function (){
@@ -125,7 +128,28 @@
                         post_id: post.id
                     }
                 }).then(response => {
-                    post.likes=response.data =='liked'
+                    // update the post with info from the api
+                    this.likes = response.data.likes
+                    console.log(response.data)
+                    console.log(post)
+                    this.postIndex()
+                    
+                })
+            },
+            attending: function(post){
+                axios({
+                    url: "{% url 'climbupApp:attendants'%}",
+                    method: 'get',
+                    params: {
+                        post_id: post.id
+                    }
+                }).then(response => {
+                    console.log(response)
+                    post.attendees = response.data.attendees
+                    console.log(this.attendees, 'this.attendees')
+                    console.log(response.data.attendees, 'response.data.attendees')
+                    console.log('connected')
+                    this.postIndex()
                 })
             },
             getCities: function () {

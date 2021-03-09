@@ -88,13 +88,14 @@ ClimbUp will be a social media app focusing on sharing climbing information, sch
 * Week 2
     * fix issues from week 1
     * add ability to sort by city in the homepage
-    * add following page to only see other climbers you follow
-    * add ability to mark self on other user post
+    **strech
+      * add following page to only see other climbers you follow
+    * ~add ability to mark self on other user post~
     * Update profile
     * begin styling for readability
     * edit post
     * delete post
-    * like other user posts
+    * ~like other user posts~
     * public page with all posts in city of User 
 * Week 3
     * Fix recurring issues from weeks 1/2

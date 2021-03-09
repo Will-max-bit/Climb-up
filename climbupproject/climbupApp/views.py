@@ -24,6 +24,10 @@ def load_posts(request):
         post_data.append({
             'title': post.title,
             'text': post.text,
+            'id': post.id,
+            'liked_by': request.user in post.likes.all(),
+            'attendants': [attendee.username for attendee in post.attendees.all()],
+            'likes': post.likes.count(),
             'post_image': post.post_image.url,
             'city': post.city.name,
             'author': post.author.username,
@@ -48,15 +52,6 @@ def profile_load(request):
             'created_date': post.created_date
         })
     return JsonResponse({'profile_posts': profile_data})
-
-# def my_city(request):
-#     return render(request, 'climbupApp/my_city.html' )
-
-# def city_load(request):
-#     city_posts = Post.objects.filter()
-
-
-
 
 
 def login_page(request):
@@ -98,20 +93,15 @@ def logout_user(request):
 
 
 def post_new(request):
-    # print(request.POST)
-    # print(request.FILES)
     city_id = request.POST['city_id']
     created_date = request.POST['created_date'],
     scheduled_date = request.POST['scheduled_date'],
-    print(created_date)
-    print(scheduled_date)
     post = Post(
         title = request.POST['title'],
         text = request.POST['text'],
         post_image = request.FILES['post_image'],
         city = City.objects.get(id=city_id),
         author = request.user,
-        # created_date = request.POST['created_date'],
         scheduled_date = request.POST['scheduled_date'],
     )
     post.save()
@@ -136,32 +126,57 @@ def add_city(request):
     city.save()
     return HttpResponse('city added')
 
-
+@login_required()
 def like_post(request):
-    return HttpResponse('liked')
     post_id = request.GET['post_id']
     post = Post.objects.get(id=post_id)
     user = request.user
-    response = ''
-    if post.liked_by.filter(id=user.id).exists():
-        post.liked_by.remove(user)
-        response = 'liked'
+    liked_by = True
+    if post.likes.filter(id=user.id).exists():
+        post.likes.remove(user)
+        liked_by = False
     else:
-        post.liked_by.add(user)
-        response = 'liked'
-
-
-
-
-
-# def login(request):
-#     if request.method == 'POST':
-#         username = request.POST['username']
-#         password = request.POST['password']
-#         user = authenticate(request, username=username, password=password)
-#         if user is not None:
-#             django.contrib.auth.login(request, user)
-#             messages.success(request, 'login successful')
-#         else:
-#             messages.info(request, 'invalid username or password')
-#     return render(request, 'climbupApp/login.html', {})
+        post.likes.add(user)
+        liked_by = True
+    likes = post.likes.count()
+    response = { 'likes': likes, 'liked_by': liked_by}
+    
+    #respond with json containing the current number of likes and a boolean indicating whether the current user likes it
+    return JsonResponse(response)
+    
+@login_required()
+def attendants(request):
+    # return HttpResponse('meet up')
+    post_id = request.GET['post_id']
+    post = Post.objects.get(id=post_id)
+    user = request.user
+    # attended_by = user.username
+    if post.attendees.filter(id=user.id).exists():
+        post.attendees.remove(user)
+        attended_by = ''
+    else:
+        post.attendees.add(user)
+        attended_by = user.username
+    attendees = post.attendees.all()
+    attendee_data = []
+    for user in attendees:
+        attendee_data.append(user.username)
+    print(attendee_data)
+    response = {'attendees': attendee_data, 'attended_by': attended_by}
+    return JsonResponse(response)
+    
+@login_required
+def post_edit(request):
+    city_id = request.POST['city_id']
+    created_date = request.POST['created_date'],
+    scheduled_date = request.POST['scheduled_date'],
+    post = Post(
+        title = request.POST['title'],
+        text = request.POST['text'],
+        post_image = request.FILES['post_image'],
+        city = City.objects.get(id=city_id),
+        author = request.user,
+        scheduled_date = request.POST['scheduled_date'],
+    )
+    post.save()
+    

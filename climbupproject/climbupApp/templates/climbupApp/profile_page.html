@@ -69,6 +69,15 @@
             message: 'Profile page',
             modal: null,
             edit_post: '',
+            text: '',
+            attendees: '',
+            title: '',
+            likes: '',
+            created_date: '',
+            cities: '',
+            city_add: '',
+            city_id: '',
+            scheduled_date: '',
         },
         methods: {
             postIndex: function () {
@@ -80,6 +89,30 @@
                     console.log(response.data)
                 })
             },
+            post_edit: function(){
+              let form_data = new FormData()
+              let post_image = document.querySelector('#post_image')
+              formData.set('post_image', post_image.files[0])
+              formData.set('text', this.text)
+              formData.set('title', this.title)
+              formData.set('city_id', this.city_id)
+              form_data.set('attendees', this.attendees)
+              form_data.set('likes', this.likes)
+              form_data.set('created_date', this.created_date)
+              form_data.set('scheduled_date', this.schedulated_date)
+              axios({
+                url: "{% url 'climbupApp:post_edit' %}"
+                method: "post"
+                data: form_data,
+                headers: {
+                  "X-CSRFToken": "{{ csrf_token }}"
+                }
+              }).then(response => {
+                console.log(response.data)
+                this.postIndex()
+
+              })
+            }
         },
         created: function () {
             this.postIndex()
@@ -88,3 +121,4 @@
     })
 </script>
 {% endblock%}
+<!-- once the function hits axios it fails. -->
