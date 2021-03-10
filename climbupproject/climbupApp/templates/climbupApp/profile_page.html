@@ -14,14 +14,15 @@
         </div>
         <div class="modal-body">
           <form action="">
-          <input type="title" class="form-control" v-model="title" id="new_post_form" placeholder="What's happening?">
+          <input type="title" class="form-control" v-model="title" id="edit_post_form" placeholder="What's happening?">
             <textarea class="form-control" id="post_edit" rows="3"></textarea>
             <input class="form-control form-control-sm" id="post_image" type="file" accept="image/*" />
-            <button type="button" data-bs-dismiss="modal" class="btn btn-primary">Submit</button>
+            <input type="date" class="form-control" id="scheduled_date" v-model="scheduled_date">
             <select class="form-select form-select-sm" v-model="city_id" aria-label=".form-select-sm example">
             <option selected>Select a City</option>
             <option v-for="city in cities" v-bind:value="city.id">[[city.name]]</option>
-        </select>
+            </select>
+            <button type="button" data-bs-dismiss="modal" v-on:click="post_edit(profile_posts)" class="btn btn-primary">Submit</button>
           </form>
         </div>
         <div class="modal-footer">
@@ -37,9 +38,9 @@
 
     <h1 class="text-center" >[[ message ]]</h1>
     <div class="my-3 mx-1" id="card" v-for="post in profile_posts" style="width: 18rem;">
-        <img v-bind:src="[[post.post_image]]" class="card-img-top" alt="...">
+        <img v-bind:src="[[post.post_image]]" id="post_image" class="card-img-top" alt="...">
         <div class="card-body">
-            <div>Author- [[ post.author]]</div>
+            <div>Author- [[post.author]]</div>
             <div>Location- [[post.city]]</div>
             <div>posted- [[post.created_date]]</div>
             <hr>
@@ -50,8 +51,11 @@
             </p>
         </div>
       {% if user.is_authenticated %}
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-            edit post
+            <button type="button" class="btn btn-primary"  data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+            Edit post
+          </button>
+          <button type="button" class="btn btn-danger" v-on:click="delete_item(profile_posts)"  >
+            Delete post
           </button>
         {% endif %}
     </div>
@@ -68,9 +72,9 @@
             profile_posts: [],
             message: 'Profile page',
             modal: null,
-            edit_post: '',
             text: '',
             attendees: '',
+            author: '',
             title: '',
             likes: '',
             created_date: '',
@@ -86,31 +90,55 @@
                     method: 'get',
                 }).then(response => {
                     this.profile_posts = response.data.profile_posts
-                    console.log(response.data)
+                    console.log(this.profile_posts)
+                    this.getCities()
                 })
             },
-            post_edit: function(){
+            post_edit: function(post){
+              console.log(post)
               let form_data = new FormData()
               let post_image = document.querySelector('#post_image')
-              formData.set('post_image', post_image.files[0])
-              formData.set('text', this.text)
-              formData.set('title', this.title)
-              formData.set('city_id', this.city_id)
-              form_data.set('attendees', this.attendees)
-              form_data.set('likes', this.likes)
-              form_data.set('created_date', this.created_date)
-              form_data.set('scheduled_date', this.schedulated_date)
+              form_data.set('post_image', post_image.files[0])
+              form_data.set('text', post.text)
+              form_data.set('author', post.author)
+              form_data.set('title', post.title)
+              form_data.set('city_id', post.city_id)
+              form_data.set('attendees', post.attendees)
+              form_data.set('likes', post.likes)
+              form_data.set('created_date', post.created_date)
+              form_data.set('scheduled_date', post.schedulated_date)
               axios({
-                url: "{% url 'climbupApp:post_edit' %}"
-                method: "post"
+                url: "{% url 'climbupApp:post_edit' %}",
+                method: "post",
                 data: form_data,
                 headers: {
                   "X-CSRFToken": "{{ csrf_token }}"
                 }
               }).then(response => {
-                console.log(response.data)
+                // console.log(response.data)
                 this.postIndex()
 
+              })
+            },
+            getCities: function () {
+                axios({
+                    url: "{% url 'climbupApp:get_cities' %}",
+                    method: 'get',
+                }).then(response => {
+                    this.cities = response.data.cities
+                    // console.log(response.data)
+                    console.log()
+                })
+            },
+            delete_item: function(post){
+              axios({
+                url: "{% url 'climbupApp:delete_post' %}",
+                method: 'get',
+                params:{
+                  post_id: profile_posts_id,
+                }
+              }).then(response => {
+                console.log(response.data)
               })
             }
         },
@@ -120,5 +148,5 @@
         }
     })
 </script>
-{% endblock%}
-<!-- once the function hits axios it fails. -->
+{% endblock %}
+<!-- once the function hits axios it fails -->

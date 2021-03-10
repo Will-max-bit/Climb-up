@@ -13,5 +13,8 @@ urlpatterns = [
     path('post_new/', views.post_new, name='post_new'),
     path('get_cities/', views.get_cities, name='get_cities'),
     path('add_city/', views.add_city, name='add_city'),
-    path('like_post/', views.like_post, name='like_post')
+    path('like_post/', views.like_post, name='like_post'),
+    path('attendants/', views.attendants, name='attendants'),
+    path('post_edit/', views.post_edit, name='post_edit'),
+    path('delete_post/', views.delete_post, name='delete_post')
 ]

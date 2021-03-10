@@ -1,8 +1,9 @@
-from django.shortcuts import render, HttpResponseRedirect, reverse, redirect, Http404, HttpResponse
+from django.shortcuts import render, HttpResponseRedirect, reverse, redirect, Http404, HttpResponse, get_object_or_404
 from django.http import HttpResponse
 from .models import Post, City
 from django.http import HttpResponse, JsonResponse
 import json
+
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 from django.contrib import messages
@@ -49,7 +50,7 @@ def profile_load(request):
             'post_image': post.post_image.url,
             'city': post.city.name,
             'author': post.author.username,
-            'created_date': post.created_date
+            'created_date': post.created_date.strftime('%b %d %Y'),
         })
     return JsonResponse({'profile_posts': profile_data})
 
@@ -180,3 +181,9 @@ def post_edit(request):
     )
     post.save()
     
+@login_required
+def delete_post(request):
+    delete_post_id = request.GET['post_id']
+    delete_post = Post.objects.get(id=delete_post_id)
+    post.delete()
+    return HttpResponse('deleted')
