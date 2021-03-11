@@ -48,12 +48,13 @@ def profile_load(request):
             'title': post.title,
             'text': post.text,
             'post_image': post.post_image.url,
+            'id': post.id,
             'city': post.city.name,
             'author': post.author.username,
             'created_date': post.created_date.strftime('%b %d %Y'),
         })
     return JsonResponse({'profile_posts': profile_data})
-
+#add post id in profile load
 
 def login_page(request):
     if request.method == 'POST':
@@ -168,22 +169,32 @@ def attendants(request):
     
 @login_required
 def post_edit(request):
-    city_id = request.POST['city_id']
-    created_date = request.POST['created_date'],
-    scheduled_date = request.POST['scheduled_date'],
-    post = Post(
-        title = request.POST['title'],
-        text = request.POST['text'],
-        post_image = request.FILES['post_image'],
-        city = City.objects.get(id=city_id),
-        author = request.user,
-        scheduled_date = request.POST['scheduled_date'],
-    )
+    print(request.POST)
+    post_id = int(request.POST.get('post_id'))
+    print(post_id,type(post_id))
+    post = Post.objects.get(id=post_id)
+    post.city_id = int(request.POST['city_id'])
+    post.title = request.POST['title']
+    # post.post_image = request.FILES['post_image'],
+    post.text = request.POST['text']
+    post.author = request.user
+    # post.created_date = request.POST['created_date']
+    post.scheduled_date = request.POST['scheduled_date']
+    # post = Post(
+    #     post_id = request.POST['post_id'],
+    #     title = request.POST['title'],
+    #     text = request.POST['text'],
+    #     post_image = request.FILES['post_image'],
+    #     city = City.objects.get(id=city_id),
+    #     author = request.user,
+    #     scheduled_date = request.POST['scheduled_date'],
+    # )
     post.save()
+    return HttpResponse('-----------------------------------edited-----------------------------------------')
     
 @login_required
 def delete_post(request):
-    delete_post_id = request.GET['post_id']
-    delete_post = Post.objects.get(id=delete_post_id)
+    delete_post_id = int(request.POST.get('post_id'))
+    post = Post.objects.get(id=delete_post_id)
     post.delete()
     return HttpResponse('deleted')

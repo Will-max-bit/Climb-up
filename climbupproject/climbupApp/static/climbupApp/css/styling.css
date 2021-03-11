@@ -2,5 +2,10 @@ body{
     background-color: rgb(38, 0, 255);
 }
 h1{
-    background-color: rgb(0, 4, 255);
+    background-color: rgb(255, 239, 214);
+}
+#top_bar{
+    display: flex;
+    /* justify-content: space-evenly; */
+    color: blue;
 }

@@ -24,7 +24,7 @@ ClimbUp will be a social media app focusing on sharing climbing information, sch
 - Posts
   - [x] Create a post
   - [ ] Delete a post
-  - [ ] Mark themselves as going to another users post
+  - [x] Mark themselves as going to another users post
 - [x] Public homepage with posts from other users and the user
 - [x] Profile home page with user's posts, photos, information
 
@@ -93,8 +93,8 @@ ClimbUp will be a social media app focusing on sharing climbing information, sch
     * ~add ability to mark self on other user post~
     * Update profile
     * begin styling for readability
-    * edit post
-    * delete post
+    * ~edit post~
+    * ~delete post~
     * ~like other user posts~
     * public page with all posts in city of User 
 * Week 3

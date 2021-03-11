@@ -2,7 +2,7 @@
 
 {% block content %}
 
-<div id="app" class="container .justify-content">
+<div id="app" class="container .justify-content-center">
 
     
 
@@ -32,7 +32,7 @@
 
     <div class="col">
         <div class="form-group">
-            <label for="new_post_form">User</label>
+            <label for="new_post_form"></label>
             <input type="title" class="form-control" v-model="title" id="new_post_form" placeholder="What's happening?">
         </div>
         <textarea class="form-control" v-model="text" id="exampleFormControlTextarea1" rows="3"></textarea>
@@ -50,7 +50,7 @@
           </button>
 
     </div>
-    <div class="my-3 mx-1 .justify-content-end" id="card" v-for="post in vue_posts" style="width: 18rem;">
+    <div class="container m-o" id="card" v-for="post in vue_posts" style="width: 18rem;">
         <img v-bind:src="post.post_image" class="card-img-top" alt="...">
         <div class="card-body">
             <div>Author- [[ post.author]]</div>
@@ -76,6 +76,10 @@
 
 
 </div>
+<script>
+import AOS from 'aos'
+import 'aos/dist/aos.css'
+</script>
 <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
 <script>
