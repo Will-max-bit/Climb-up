@@ -88,11 +88,12 @@ ClimbUp will be a social media app focusing on sharing climbing information, sch
 * Week 2
     * fix issues from week 1
     * add ability to sort by city in the homepage
+      * use BT Icon for sort BTN which opens modal for filtering
     **strech
       * add following page to only see other climbers you follow
     * ~add ability to mark self on other user post~
     * Update profile
-    * begin styling for readability
+    * ~begin styling for readability~
     * ~edit post~
     * ~delete post~
     * ~like other user posts~

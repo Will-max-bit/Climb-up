@@ -3,29 +3,29 @@ from django.http import HttpResponse
 from .models import Post, City
 from django.http import HttpResponse, JsonResponse
 import json
-
+from django.db.models import Q
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
 from django.contrib import messages
 from .forms import UserRegisterForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-# Create your views here.
 
-## renders the homepage with all posts
-def index(request):
+
+
+def index(request):# renders the homepage with all posts
     return render(request, 'climbupApp/index.html')
 
-# provides the data to be rendered on the home page
-def load_posts(request):
-    # getting posts out of database
-    posts = Post.objects.all().order_by('-created_date')
+
+def load_posts(request):# provides the data to be rendered on the home page
+    posts = Post.objects.all().order_by('-created_date')# getting posts out of database
     post_data = []
-    for post in posts:
+    for post in posts: # iterating over post data, converting into dictionaries and returning JSON response
         post_data.append({
             'title': post.title,
             'text': post.text,
             'id': post.id,
+            'city_id': post.city.id,
             'liked_by': request.user in post.likes.all(),
             'attendants': [attendee.username for attendee in post.attendees.all()],
             'likes': post.likes.count(),
@@ -36,14 +36,14 @@ def load_posts(request):
         })
     return JsonResponse({'posts': post_data,})
 
-def profile_page(request):
+def profile_page(request): #page to render 
     return render(request, 'climbupApp/profile_page.html' )
 
 
 def profile_load(request):
-    profile_posts = Post.objects.filter(author=request.user).order_by('-created_date')
+    profile_posts = Post.objects.filter(author=request.user).order_by('-created_date')# getting the data out of the dictionary that matches the requesting user
     profile_data = []
-    for post in profile_posts:
+    for post in profile_posts:# iterating over post data, converting into dictionaries and returning JSON response
         profile_data.append({
             'title': post.title,
             'text': post.text,
@@ -54,10 +54,10 @@ def profile_load(request):
             'created_date': post.created_date.strftime('%b %d %Y'),
         })
     return JsonResponse({'profile_posts': profile_data})
-#add post id in profile load
+
 
 def login_page(request):
-    if request.method == 'POST':
+    if request.method == 'POST': 
         username = request.POST['username']
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
@@ -67,7 +67,6 @@ def login_page(request):
             return redirect('climbupApp:index')
         else:
             messages.info(request, 'invalid username or password')
-    # return render(request, 'climbupApp/login.html', {})
     return render(request, 'climbupApp/login_page.html')
 
 
@@ -76,7 +75,7 @@ def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST, request.FILES)
         if form.is_valid():
-            print(form.cleaned_data)
+            # print(form.cleaned_data)
             user = form.save()
             profile_image = form.cleaned_data['image']
             user = authenticate(username=form.cleaned_data['username'], password = form.cleaned_data['password1'])
@@ -180,15 +179,6 @@ def post_edit(request):
     post.author = request.user
     # post.created_date = request.POST['created_date']
     post.scheduled_date = request.POST['scheduled_date']
-    # post = Post(
-    #     post_id = request.POST['post_id'],
-    #     title = request.POST['title'],
-    #     text = request.POST['text'],
-    #     post_image = request.FILES['post_image'],
-    #     city = City.objects.get(id=city_id),
-    #     author = request.user,
-    #     scheduled_date = request.POST['scheduled_date'],
-    # )
     post.save()
     return HttpResponse('-----------------------------------edited-----------------------------------------')
     

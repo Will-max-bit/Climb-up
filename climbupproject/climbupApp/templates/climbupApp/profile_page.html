@@ -1,7 +1,7 @@
 {% extends 'climbupApp/base.html'%}
 {% block content %}
 
-<div id="app" class="container ml-30">
+<div id="app" class="container ">
 
 
     <!-- Modal -->
@@ -30,14 +30,8 @@
       </div>
     </div>
   </div>
-
-
-
-
-
-
-    <h1 class="text-center" >[[ message ]]</h1>
-    <div class="my-3 mx-1" id="card" v-for="post in profile_posts" style="width: 18rem;">
+    <h1 class="text-center" >Your Profile</h1>
+    <div class="container m-o my-1" id="card" v-for="post in profile_posts" style="width: 100%;">
         <img v-bind:src="[[post.post_image]]" id="post_image" class="card-img-top" alt="...">
         <div class="card-body">
             <div>Author- [[post.author]]</div>
@@ -52,12 +46,14 @@
             </p>
         </div>
       {% if user.is_authenticated %}
-            <button type="button" class="btn btn-primary" v-on:click="editing_post = {...post}" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+      <div class="d-flex justify-content-evenly">
+            <button type="button" class="btn btn-primary mb-1" v-on:click="editing_post = {...post}" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
             Edit post
           </button>
-          <button type="button" class="btn btn-danger" v-on:click="delete_item(post)"  >
+          <button type="button" class="btn btn-danger mb-1" v-on:click="delete_item(post)"  >
             Delete post
           </button>
+          </div>
         {% endif %}
     </div>
 </div>
@@ -110,9 +106,7 @@
               form_data.append('author', this.editing_post.author)
               form_data.append('title', this.editing_post.title)
               form_data.append('city_id', this.editing_post.city_id)
-              // form_data.set('attendees', this.editing_post.attendees)
-              // form_data.set('likes', this.editing_post.likes)
-              // form_data.append('created_date', this.editing_post.created_date)
+          
               form_data.append('scheduled_date', this.editing_post.scheduled_date)
               axios({
                 url: "{% url 'climbupApp:post_edit' %}",

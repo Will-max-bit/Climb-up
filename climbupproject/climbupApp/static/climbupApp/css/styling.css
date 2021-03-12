@@ -1,11 +1,31 @@
-body{
-    background-color: rgb(38, 0, 255);
+#background_image{
+    background-image: url('./images/christie-greene-FzOidLFJN-w-unsplash.jpg');
 }
 h1{
-    background-color: rgb(255, 239, 214);
+    text-align: center;
+    background-color: rgb(219, 218, 215);
 }
 #top_bar{
     display: flex;
     /* justify-content: space-evenly; */
     color: blue;
+}
+#card{
+    background-color: rgb(219, 218, 215);
+    min-width: 200px;
+    border: solid black 1px;
+    border-radius: 5px;
+}
+#new_post{
+    /* border: solid black 1px; */
+}
+.content-section .form_label{
+    background-color: rgb(219, 218, 215);
+    border-radius: 5px;
+}
+.card-title{
+    font-family: 'Architects Daughter', cursive;
+}
+button{
+    box-shadow:  0px 0px 5px rgb(29, 29, 29);
 }

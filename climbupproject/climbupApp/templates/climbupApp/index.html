@@ -2,56 +2,66 @@
 
 {% block content %}
 
-<div id="app" class="container .justify-content-center">
+<div id="app" class="container ">
 
-    
 
-  
-  <!-- Modal -->
-  <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-header">
-          <h5 class="modal-title" id="staticBackdropLabel">Enter a city</h5>
-          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+
+
+    <!-- Modal -->
+    <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="staticBackdropLabel"><i class="bi bi-building">Enter a city</i></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="">
+                        <textarea class="form-control" v-model="city_add" id="city_add" rows="3"></textarea>
+                        <button type="button" v-on:click="addCity" data-bs-dismiss="modal" class="btn btn-primary">Add
+                            city</button>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                </div>
+            </div>
         </div>
-        <div class="modal-body">
-          <form action="">
-            <textarea class="form-control" v-model="city_add" id="city_add" rows="3"></textarea>
-            <button type="button" v-on:click="addCity" data-bs-dismiss="modal" class="btn btn-primary">Add city</button>
-          </form>
-        </div>
-        <div class="modal-footer">
-        </div>
-      </div>
     </div>
-  </div>
 
 
 
 
-    <div class="col">
+    <div class="col" id="new_post">
         <div class="form-group">
             <label for="new_post_form"></label>
             <input type="title" class="form-control" v-model="title" id="new_post_form" placeholder="What's happening?">
         </div>
         <textarea class="form-control" v-model="text" id="exampleFormControlTextarea1" rows="3"></textarea>
+        <select class="form-select form-select-sm" v-model="city_id" aria-label=".form-select-sm example">
+            <option value="" disabled selected>Select a City</option>
+            <option v-for="city in cities" placeholder="What's happening?" v-bind:value="city.id">[[city.name]]</option>
+        </select> 
         <input class="form-control form-control-sm" id="post_image" type="file" accept="image/*" />
         <input type="date" class="form-control" id="scheduled_date" v-model="scheduled_date">
-
-        <select class="form-select form-select-sm" v-model="city_id" aria-label=".form-select-sm example">
-            <option selected>Select a City</option>
-            <option v-for="city in cities" v-bind:value="city.id">[[city.name]]</option>
-        </select>
-        <!-- <button type="button" v-on:click="open_modal" class="btn btn-primary">Add a city</button> -->
+        <div class="d-flex justify-content-evenly" id="new_postbtns">
         <button type="button" v-on:click="post_new" class="btn btn-primary">Send it</button>
         <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
             Add a City
-          </button>
-
+        </button>
+        </div>
+        <hr>
+       <div class=" container row">
+        <select class="form-select form-select-sm" v-model="city_sort" aria-label=".form-select-sm example">
+            <option value="" disabled selected>Select a City</option>
+            <option v-for="city in cities" v-bind:value="city.id">[[city.name]]</option>
+        </select> 
+        <button type="button" v-on:click="postIndex" class="btn btn-light">sort by city</button>
+        </div>
     </div>
-    <div class="container m-o" id="card" v-for="post in vue_posts" style="width: 18rem;">
-        <img v-bind:src="post.post_image" class="card-img-top" alt="...">
+    <div class="container m-o mt-1" id="card" data-aos="fade-up" data-aos-duration="3000" v-for="post in vue_posts"
+        style="width: 100%;">
+        <img v-bind:src="post.post_image" class="card-img-top mt-1" alt="...">
         <div class="card-body">
             <div>Author- [[ post.author]]</div>
             <div>Location- [[post.city]]</div>
@@ -61,12 +71,17 @@
             <p class="card-text">
                 [[post.text]]
             </p>
-            
-            <div>Likes-[[post.likes]]</div>
-            <div>attendants-[[post.attendants]]</div>
+            <div class="card-text d-flex justify-content-evenly">
+                <div>Likes-[[post.likes]]</div>
+                <div>attendants-[[post.attendants]]</div>
+            </div>
             {% if user.is_authenticated %}
-            <button type='button' class="btn btn-floating" data-mdb-ripple-color="dark" v-on:click="likePost(post)">[[post.liked? '👎': '👍' ]]</button>
-            <button type='button' class='btn btn-floatin' data-mdb-ripple-color='dark' v-on:click="attending(post)">🧗</button>
+            <div class="d-flex justify-content-evenly">
+            <button type='button' class="btn btn-floating mb-1" data-mdb-ripple-color="dark"
+                v-on:click="likePost(post)">[[post.liked? '👎': '👍' ]]</button>
+            <button type='button' class='btn btn-floatin mb-1' data-mdb-ripple-color='dark'
+                v-on:click="attending(post)">🧗</button>
+            </div>
             {% endif %}
         </div>
     </div>
@@ -76,10 +91,7 @@
 
 
 </div>
-<script>
-import AOS from 'aos'
-import 'aos/dist/aos.css'
-</script>
+<script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
 <script>
@@ -98,18 +110,28 @@ import 'aos/dist/aos.css'
             cities: '',
             city_id: '',
             city_add: '',
+            city_sort: '',
         },
         methods: {
             postIndex: function () {
                 axios({
                     url: "{% url 'climbupApp:load_posts' %}",
                     method: 'get',
-                }).then(response => {
-                    this.vue_posts = response.data.posts
-                    console.log( this.vue_posts, 'vue_posts')
+                    params: {
+                        sort: this.city_sort,
+                    }
+                }).then(response => { 
+                    if (this.city_sort){
+                        this.vue_posts = response.data.posts.filter(post=>this.city_sort === post.id)
+
+                    }
+                    else {
+                        this.vue_posts = response.data.posts
+                    }
+                    console.log(this.vue_posts, 'vue_posts')
                 })
             },
-            addCity: function (){
+            addCity: function () {
                 let form_data = new FormData()
                 form_data.append('city_add', this.city_add)
                 axios({
@@ -120,11 +142,11 @@ import 'aos/dist/aos.css'
                         "X-CSRFToken": "{{ csrf_token }}"
                     }
                 }).then(response => {
-                    console.log(response.data)
+                    // console.log(response.data)
                     this.getCities()
                 })
             },
-            likePost: function(post){
+            likePost: function (post) {
                 axios({
                     url: "{% url 'climbupApp:like_post'%}",
                     method: 'get',
@@ -134,13 +156,14 @@ import 'aos/dist/aos.css'
                 }).then(response => {
                     // update the post with info from the api
                     this.likes = response.data.likes
-                    console.log(response.data)
-                    console.log(post)
+                    // console.log(response.data)
+                    // console.log(post)
+                    console.log(this.city_sort)
                     this.postIndex()
-                    
+
                 })
             },
-            attending: function(post){
+            attending: function (post) {
                 axios({
                     url: "{% url 'climbupApp:attendants'%}",
                     method: 'get',
@@ -148,11 +171,11 @@ import 'aos/dist/aos.css'
                         post_id: post.id
                     }
                 }).then(response => {
-                    console.log(response)
+                    // console.log(response)
                     post.attendees = response.data.attendees
-                    console.log(this.attendees, 'this.attendees')
-                    console.log(response.data.attendees, 'response.data.attendees')
-                    console.log('connected')
+                    // console.log(this.attendees, 'this.attendees')
+                    // console.log(response.data.attendees, 'response.data.attendees')
+                    // console.log('connected')
                     this.postIndex()
                 })
             },
@@ -162,8 +185,8 @@ import 'aos/dist/aos.css'
                     method: 'get',
                 }).then(response => {
                     this.cities = response.data.cities
-                    console.log(response.data)
-                    console.log()
+                    // console.log(response.data)
+                    
                 })
             },
             post_new: function () {
@@ -187,7 +210,7 @@ import 'aos/dist/aos.css'
                         "X-CSRFToken": "{{ csrf_token }}"
                     }
                 }).then(response => {
-                    console.log(response.data)
+                    // console.log(response.data)
                     this.postIndex()
                 })
             },
@@ -200,11 +223,11 @@ import 'aos/dist/aos.css'
 
         },
         created: function () {
-
+            AOS.init()
             this.modal = new bootstrap.Modal(document.querySelector('.modal'), {})
             this.postIndex()
             this.getCities()
-        }
+        },
     })
 </script>
 {% endblock %}
