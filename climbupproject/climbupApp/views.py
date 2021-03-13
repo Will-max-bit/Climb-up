@@ -58,14 +58,14 @@ def profile_load(request):
 
 def login_page(request):
     if request.method == 'POST': 
-        username = request.POST['username']
+        username = request.POST['username']#assigning UN&P to variables 
         password = request.POST['password']
         user = authenticate(request, username=username, password=password)
-        if user is not None:
-            login(request, user)
+        if user is not None: #checking the user exists in database.
+            login(request, user) # checking credentials against database and logging user in
             messages.success(request, 'login successful')
             return redirect('climbupApp:index')
-        else:
+        else: #displaying error message to the user
             messages.info(request, 'invalid username or password')
     return render(request, 'climbupApp/login_page.html')
 
@@ -74,15 +74,15 @@ def login_page(request):
 def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST, request.FILES)
-        if form.is_valid():
-            # print(form.cleaned_data)
+        if form.is_valid(): #checking form data,saving to database and informing the user of success
             user = form.save()
             profile_image = form.cleaned_data['image']
             user = authenticate(username=form.cleaned_data['username'], password = form.cleaned_data['password1'])
             messages.success(request, f'Account created for{user.username}')
-            login(request, user)
+            login(request, user) # logging user in and redirecting to main page
             return redirect('climbupApp:index')
         else:
+            messages.error(request, f'Please try again')
             return render(request, 'climbupApp/register.html', {'form': form})
     else:
         form = UserRegisterForm()
@@ -94,7 +94,7 @@ def logout_user(request):
 
 
 def post_new(request):
-    city_id = request.POST['city_id']
+    city_id = request.POST['city_id'] # assigning data to variables for saving to database from request
     created_date = request.POST['created_date'],
     scheduled_date = request.POST['scheduled_date'],
     post = Post(
@@ -106,11 +106,11 @@ def post_new(request):
         scheduled_date = request.POST['scheduled_date'],
     )
     post.save()
-    return HttpResponse('Ok Morty')
+    return HttpResponse('saved')
 
     
 def get_cities(request):
-    cities = City.objects.all()
+    cities = City.objects.all() #getting city data out of database for selects on main page 
     city_data = []
     for city in cities:
         city_data.append({
@@ -119,7 +119,7 @@ def get_cities(request):
         })
     return JsonResponse({'cities': city_data})
 
-def add_city(request):
+def add_city(request): # assigning data to variables for saving to database
     city_name = request.POST['city_add']
     city = City(
         name = city_name
@@ -129,7 +129,7 @@ def add_city(request):
 
 @login_required()
 def like_post(request):
-    post_id = request.GET['post_id']
+    post_id = request.GET['post_id'] #assigning "liked" post to variable
     post = Post.objects.get(id=post_id)
     user = request.user
     liked_by = True
@@ -141,17 +141,13 @@ def like_post(request):
         liked_by = True
     likes = post.likes.count()
     response = { 'likes': likes, 'liked_by': liked_by}
-    
-    #respond with json containing the current number of likes and a boolean indicating whether the current user likes it
     return JsonResponse(response)
     
 @login_required()
 def attendants(request):
-    # return HttpResponse('meet up')
     post_id = request.GET['post_id']
     post = Post.objects.get(id=post_id)
     user = request.user
-    # attended_by = user.username
     if post.attendees.filter(id=user.id).exists():
         post.attendees.remove(user)
         attended_by = ''
@@ -174,13 +170,11 @@ def post_edit(request):
     post = Post.objects.get(id=post_id)
     post.city_id = int(request.POST['city_id'])
     post.title = request.POST['title']
-    # post.post_image = request.FILES['post_image'],
     post.text = request.POST['text']
     post.author = request.user
-    # post.created_date = request.POST['created_date']
     post.scheduled_date = request.POST['scheduled_date']
     post.save()
-    return HttpResponse('-----------------------------------edited-----------------------------------------')
+    return HttpResponse('edited')
     
 @login_required
 def delete_post(request):
