@@ -92,7 +92,6 @@ ClimbUp will be a social media app focusing on sharing climbing information, sch
     **strech
       * add following page to only see other climbers you follow
     * ~add ability to mark self on other user post~
-    * Update profile
     * ~begin styling for readability~
     * ~edit post~
     * ~delete post~

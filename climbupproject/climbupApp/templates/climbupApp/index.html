@@ -41,22 +41,21 @@
         <select class="form-select form-select-sm" v-model="city_id" aria-label=".form-select-sm example">
             <option value="" disabled selected>Select a City</option>
             <option v-for="city in cities" placeholder="What's happening?" v-bind:value="city.id">[[city.name]]</option>
-        </select> 
+        </select>
         <input class="form-control form-control-sm" id="post_image" type="file" accept="image/*" />
         <input type="date" class="form-control" id="scheduled_date" v-model="scheduled_date">
         <div class="d-flex justify-content-evenly" id="new_postbtns">
-        <button type="button" v-on:click="post_new" class="btn btn-primary">Send it</button>
-        <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
-            Add a City
-        </button>
+            <button type="button" v-on:click="post_new" class="btn btn-primary">Send it</button>
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                Add a City
+            </button>
         </div>
-        <hr>
-       <div class=" container row">
-        <select class="form-select form-select-sm" v-model="city_sort" aria-label=".form-select-sm example">
-            <option value="" disabled selected>Select a City</option>
-            <option v-for="city in cities" v-bind:value="city.id">[[city.name]]</option>
-        </select> 
-        <button type="button" v-on:click="postIndex" class="btn btn-light">sort by city</button>
+        <div class=" container row mt-1">
+            <select class="form-select form-select-sm" v-model="city_sort" aria-label=".form-select-sm example">
+                <option value="" disabled selected>Select a City</option>
+                <option v-for="city in cities" v-bind:value="city.id">[[city.name]]</option>
+            </select>
+            <button type="button" v-on:click="postIndex" class="btn btn-light ">sort by city</button>
         </div>
     </div>
     <div class="container m-o mt-1" id="card" data-aos="fade-up" data-aos-duration="3000" v-for="post in vue_posts"
@@ -77,10 +76,10 @@
             </div>
             {% if user.is_authenticated %}
             <div class="d-flex justify-content-evenly">
-            <button type='button' class="btn btn-floating mb-1" data-mdb-ripple-color="dark"
-                v-on:click="likePost(post)">[[post.liked? '👎': '👍' ]]</button>
-            <button type='button' class='btn btn-floatin mb-1' data-mdb-ripple-color='dark'
-                v-on:click="attending(post)">🧗</button>
+                <button type='button' class="btn btn-floating mb-1" data-mdb-ripple-color="dark"
+                    v-on:click="likePost(post)">[[post.liked? '👎': '👍' ]]</button>
+                <button type='button' class='btn btn-floatin mb-1' data-mdb-ripple-color='dark'
+                    v-on:click="attending(post)">🧗</button>
             </div>
             {% endif %}
         </div>
@@ -120,9 +119,9 @@
                     params: {
                         sort: this.city_sort,
                     }
-                }).then(response => { 
-                    if (this.city_sort){
-                        this.vue_posts = response.data.posts.filter(post=>this.city_sort === post.id)
+                }).then(response => {
+                    if (this.city_sort) {
+                        this.vue_posts = response.data.posts.filter(post => this.city_sort === post.id)
 
                     }
                     else {
@@ -158,7 +157,7 @@
                     this.likes = response.data.likes
                     // console.log(response.data)
                     // console.log(post)
-                    console.log(this.city_sort)
+                    // console.log(this.city_sort)
                     this.postIndex()
 
                 })
@@ -173,7 +172,7 @@
                 }).then(response => {
                     // console.log(response)
                     post.attendees = response.data.attendees
-                    // console.log(this.attendees, 'this.attendees')
+                    console.log(this.attendees, 'this.attendees')
                     // console.log(response.data.attendees, 'response.data.attendees')
                     // console.log('connected')
                     this.postIndex()
@@ -186,7 +185,7 @@
                 }).then(response => {
                     this.cities = response.data.cities
                     // console.log(response.data)
-                    
+
                 })
             },
             post_new: function () {
