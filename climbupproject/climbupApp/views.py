@@ -3,6 +3,8 @@ from django.http import HttpResponse
 from .models import Post, City
 from django.http import HttpResponse, JsonResponse
 import json
+from django.utils.timezone import get_current_timezone
+from datetime import datetime
 from django.db.models import Q
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import User
@@ -26,6 +28,7 @@ def load_posts(request):# provides the data to be rendered on the home page
             'text': post.text,
             'id': post.id,
             'city_id': post.city.id,
+            'scheduled_date': post.scheduled_date.strftime("%Y-%m-%d @ %H:%M"),
             'liked_by': request.user in post.likes.all(),
             'attendants': [attendee.username for attendee in post.attendees.all()],
             'likes': post.likes.count(),
@@ -95,15 +98,18 @@ def logout_user(request):
 
 def post_new(request):
     city_id = request.POST['city_id'] # assigning data to variables for saving to database from request
-    created_date = request.POST['created_date'],
-    scheduled_date = request.POST['scheduled_date'],
+    created_date = request.POST['created_date']
+    tz = get_current_timezone()
+    scheduled_date = request.POST['scheduled_date']
+    scheduled_date = tz.localize(datetime.strptime(scheduled_date, "%Y-%m-%dT%H:%M"))
+    print(scheduled_date)
     post = Post(
         title = request.POST['title'],
         text = request.POST['text'],
         post_image = request.FILES['post_image'],
         city = City.objects.get(id=city_id),
         author = request.user,
-        scheduled_date = request.POST['scheduled_date'],
+        scheduled_date = scheduled_date,
     )
     post.save()
     return HttpResponse('saved')
@@ -145,40 +151,37 @@ def like_post(request):
     
 @login_required()
 def attendants(request):
-    post_id = request.GET['post_id']
-    post = Post.objects.get(id=post_id)
-    user = request.user
-    if post.attendees.filter(id=user.id).exists():
+    post_id = request.GET['post_id'] #getting the post object of attended post
+    post = Post.objects.get(id=post_id) #getting the post id out
+    user = request.user # recording the user id
+    if post.attendees.filter(id=user.id).exists(): # checking if the requesting user id exists in the database, if it does we remove the user from attending
         post.attendees.remove(user)
         attended_by = ''
     else:
-        post.attendees.add(user)
+        post.attendees.add(user) # or if it doesn't exisist we add the user to attending
         attended_by = user.username
-    attendees = post.attendees.all()
-    attendee_data = []
-    for user in attendees:
+    attendees = post.attendees.all() 
+    attendee_data = [] # creating a variable of attendees and creating a blank list
+    for user in attendees: # iterating through array of attendees, and assigning to the list
         attendee_data.append(user.username)
-    print(attendee_data)
-    response = {'attendees': attendee_data, 'attended_by': attended_by}
+    response = {'attendees': attendee_data, 'attended_by': attended_by} #assigning data to a dictionary and returning it in the json response.
     return JsonResponse(response)
     
 @login_required
 def post_edit(request):
-    print(request.POST)
-    post_id = int(request.POST.get('post_id'))
-    print(post_id,type(post_id))
-    post = Post.objects.get(id=post_id)
-    post.city_id = int(request.POST['city_id'])
-    post.title = request.POST['title']
-    post.text = request.POST['text']
-    post.author = request.user
-    post.scheduled_date = request.POST['scheduled_date']
-    post.save()
-    return HttpResponse('edited')
+    post_id = int(request.POST.get('post_id')) # getting the post id out
+    post = Post.objects.get(id=post_id) # using the post id to find the post in the database
+    post.city_id = int(request.POST['city_id']) #assigning the id to the to a variable
+    post.title = request.POST['title'] # assigning the title to the databse
+    post.text = request.POST['text'] # assigning the text data to the to a variable
+    post.author = request.user #reassigning the author the to a variable
+    post.scheduled_date = request.POST['scheduled_date'] # assigning the scheduled date to the to a variable
+    post.save() # resaving the post to the database
+    return HttpResponse('edited') # returning a confirmation response
     
 @login_required
 def delete_post(request):
-    delete_post_id = int(request.POST.get('post_id'))
-    post = Post.objects.get(id=delete_post_id)
-    post.delete()
-    return HttpResponse('deleted')
+    delete_post_id = int(request.POST.get('post_id')) # getting the post id out of the response
+    post = Post.objects.get(id=delete_post_id) # using the post id to get the post object out of the database
+    post.delete() # using the delete function to remove the post
+    return HttpResponse('deleted') # returning a confirmation response

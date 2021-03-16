@@ -43,7 +43,7 @@
             <option v-for="city in cities" placeholder="What's happening?" v-bind:value="city.id">[[city.name]]</option>
         </select>
         <input class="form-control form-control-sm" id="post_image" type="file" accept="image/*" />
-        <input type="date" class="form-control" id="scheduled_date" v-model="scheduled_date">
+        <input type="datetime-local" class="form-control" id="scheduled_date" v-model="scheduled_date">
         <div class="d-flex justify-content-evenly" id="new_postbtns">
             <button type="button" v-on:click="post_new" class="btn btn-primary">Send it</button>
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
@@ -65,15 +65,12 @@
             <div>Author- [[ post.author]]</div>
             <div>Location- [[post.city]]</div>
             <div>posted- [[post.created_date]]</div>
+            <div>scheduled- [[post.scheduled_date]]</div>
             <hr>
             <h5 class="card-title">[[post.title]]</h5>
             <p class="card-text">
                 [[post.text]]
             </p>
-            <div class="card-text d-flex justify-content-evenly">
-                <div>Likes-[[post.likes]]</div>
-                <div>attendants-[[post.attendants]]</div>
-            </div>
             {% if user.is_authenticated %}
             <div class="d-flex justify-content-evenly">
                 <button type='button' class="btn btn-floating mb-1" data-mdb-ripple-color="dark"
@@ -82,6 +79,10 @@
                     v-on:click="attending(post)">🧗</button>
             </div>
             {% endif %}
+            <div class="card-text d-flex justify-content-evenly">
+                <div>Likes-[[post.likes]]</div>
+                <div>attendants-[[post.attendants.join(', ')]]</div>
+            </div>
         </div>
     </div>
 
@@ -121,13 +122,15 @@
                     }
                 }).then(response => {
                     if (this.city_sort) {
-                        this.vue_posts = response.data.posts.filter(post => this.city_sort === post.id)
+                        this.vue_posts = response.data.posts.filter(post => this.city_sort === post.city_id)
+                        console.log(response.data.scheduled_date)
+                        // console.log(this.vue_posts)
 
                     }
                     else {
                         this.vue_posts = response.data.posts
                     }
-                    console.log(this.vue_posts, 'vue_posts')
+                    console.log(this.city_sort, 'city_sort')
                 })
             },
             addCity: function () {
@@ -155,9 +158,6 @@
                 }).then(response => {
                     // update the post with info from the api
                     this.likes = response.data.likes
-                    // console.log(response.data)
-                    // console.log(post)
-                    // console.log(this.city_sort)
                     this.postIndex()
 
                 })
@@ -210,6 +210,11 @@
                     }
                 }).then(response => {
                     // console.log(response.data)
+                    this.text = ''
+                    this.title = ''
+                    this.scheduled_date = ''
+                    post_image.value = ''
+                    this.city_id = ''
                     this.postIndex()
                 })
             },

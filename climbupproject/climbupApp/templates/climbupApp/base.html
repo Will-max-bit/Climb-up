@@ -26,7 +26,7 @@
     <nav class="navbar navbar-light bg-light sticky-top mt-0">
         <div id="top_bar" class="container-fluid justify-content-space-around">
             <!-- <button class="btn btn-outline-success me-2" type="button">Main button</button> -->
-            <a class="btn btn-sm btn-outline-secondary" href="{% url 'climbupApp:index'%}" type="button">Homepage</a>
+            <a href="{% url 'climbupApp:index'%}" type="button"><h1>ClimbUp</h1></a>
             {% if user.is_authenticated %}
             <a class="btn btn-sm btn-outline-secondary" href="{% url 'climbupApp:profile_page' %}"
                 type="button">Profile</a>
@@ -35,7 +35,7 @@
             <a class="btn btn-sm btn-outline-success" href="{% url 'climbupApp:register' %}" type="button">Register</a>
             <a class="btn btn-sm btn-outline-primary" href="{% url 'climbupApp:login_page' %}" type="button">log in</a>
             {% endif %}
-            <h4>Welcome- {{user.username}}</h4>
+            <h4>Welcome - {{user.username}}</h4>
         </div>
         {% if messages %}
         <ul class='messages'>
@@ -48,7 +48,6 @@
     </div>
     </div>
     </div>
-    <h1>ClimbUp</h1>
     {% block content%}
     {% endblock %}
 </body>
