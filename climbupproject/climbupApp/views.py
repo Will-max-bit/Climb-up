@@ -1,6 +1,6 @@
 from django.shortcuts import render, HttpResponseRedirect, reverse, redirect, Http404, HttpResponse, get_object_or_404
 from django.http import HttpResponse
-from .models import Post, City
+from .models import Post, City, Comment
 from django.http import HttpResponse, JsonResponse
 import json
 from django.utils.timezone import get_current_timezone
@@ -21,6 +21,7 @@ def index(request):# renders the homepage with all posts
 
 def load_posts(request):# provides the data to be rendered on the home page
     posts = Post.objects.all().order_by('-created_date')# getting posts out of database
+    # comments= Post.comments.all()
     post_data = []
     for post in posts: # iterating over post data, converting into dictionaries and returning JSON response
         post_data.append({
@@ -28,6 +29,7 @@ def load_posts(request):# provides the data to be rendered on the home page
             'text': post.text,
             'id': post.id,
             'city_id': post.city.id,
+            # 'comments': post.comments,
             'scheduled_date': post.scheduled_date.strftime("%Y-%m-%d @ %H:%M"),
             'liked_by': request.user in post.likes.all(),
             'attendants': [attendee.username for attendee in post.attendees.all()],
@@ -41,6 +43,23 @@ def load_posts(request):# provides the data to be rendered on the home page
 
 def profile_page(request): #page to render 
     return render(request, 'climbupApp/profile_page.html' )
+
+
+def load_comments(request):
+    comments = Comment.objects.all().order_by('-created_on')
+    comment_data = []
+    for comment in comments:
+        comment_data.append({
+            'post':comment.post.id,
+            'author': comment.author.username,
+            'body': comment.body,
+            'created_on': comment.created_on.strftime('%b %d %Y'),
+
+        })
+    return JsonResponse({'comments': comment_data})
+
+
+
 
 
 def profile_load(request):
@@ -102,7 +121,6 @@ def post_new(request):
     tz = get_current_timezone()
     scheduled_date = request.POST['scheduled_date']
     scheduled_date = tz.localize(datetime.strptime(scheduled_date, "%Y-%m-%dT%H:%M"))
-    print(scheduled_date)
     post = Post(
         title = request.POST['title'],
         text = request.POST['text'],
@@ -114,7 +132,21 @@ def post_new(request):
     post.save()
     return HttpResponse('saved')
 
-    
+def save_comment(request):
+    commented_post = request.get['post_id']
+    tz = get_current_timezone()
+    comment = Comment(
+    comment_body = request.POST['body'],
+    author = request.user,
+    )
+    comment.save()
+    return HttpResponse('commented')
+
+# We will have to use post as a parameter, similar to likes I think
+
+
+
+
 def get_cities(request):
     cities = City.objects.all() #getting city data out of database for selects on main page 
     city_data = []

@@ -2,6 +2,8 @@
     background-image: url('./images/christie-greene-FzOidLFJN-w-unsplash.jpg');
 }
 h1{
+    display: flex;
+    justify-content: center;
     font-family: 'Kaushan Script', cursive;
     text-align: center;
     background-color: rgb(219, 218, 215);
