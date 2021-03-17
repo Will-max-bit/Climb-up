@@ -136,14 +136,14 @@ def save_comment(request):
     commented_post = request.get['post_id']
     tz = get_current_timezone()
     comment = Comment(
-    comment_body = request.POST['body'],
+    comment_body = request.POST['comment_body'],
     author = request.user,
     )
     comment.save()
     return HttpResponse('commented')
 
 # We will have to use post as a parameter, similar to likes I think
-
+# front end should be fine now, lets set up back end later today.
 
 
 
