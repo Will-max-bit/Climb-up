@@ -133,7 +133,8 @@ def post_new(request):
     return HttpResponse('saved')
 
 def save_comment(request):
-    commented_post = request.get['post_id']
+    post_id = request.GET['post_id']
+    print(post_id, 'post_id')
     tz = get_current_timezone()
     comment = Comment(
     comment_body = request.POST['comment_body'],

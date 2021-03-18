@@ -16,5 +16,7 @@ urlpatterns = [
     path('like_post/', views.like_post, name='like_post'),
     path('attendants/', views.attendants, name='attendants'),
     path('post_edit/', views.post_edit, name='post_edit'),
-    path('delete_post/', views.delete_post, name='delete_post')
+    path('delete_post/', views.delete_post, name='delete_post'),
+    path('load_comments/', views.load_comments, name='load_comments'),
+    path('save_comment/', views.save_comment, name='save_comment'),
 ]
