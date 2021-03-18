@@ -1,7 +1,9 @@
+node_modules
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
 *$py.class
+uploaded_files
 
 # C extensions
 *.so
