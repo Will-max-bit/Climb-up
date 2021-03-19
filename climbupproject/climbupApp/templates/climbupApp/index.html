@@ -152,6 +152,7 @@
             city_sort: '',
         },
         methods: {
+            // loads posts into vue for rendering
             postIndex: function () {
                 axios({
                     url: "{% url 'climbupApp:load_posts' %}",
@@ -168,6 +169,7 @@
                     }
                 })
             },
+            // load comments into vue for rendering
             vueComments: function () {
                 axios({
                     url: "{% url 'climbupApp:load_comments' %}",
