@@ -1,5 +1,7 @@
 #background_image{
     background-image: url('./images/christie-greene-FzOidLFJN-w-unsplash.jpg');
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }
 h1{
     display: flex;
@@ -11,7 +13,7 @@ h1{
 #top_bar{
     display: flex;
     /* justify-content: space-evenly; */
-    color: blue;
+    /* color: blue; */
 }
 #card{
     background-color: rgb(219, 218, 215);
@@ -33,4 +35,8 @@ button{
 #registration{
     background-color: rgb(219, 218, 215);
     border-radius: 5px;
+}
+.accordion-body{
+    background-color: rgb(184, 184, 184);
+    text-align: center;
 }

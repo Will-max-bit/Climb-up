@@ -1,15 +1,9 @@
 {% extends 'climbupApp/base.html'%}
-
 {% block content %}
-
 <div id="app" class="container ">
-
-
-
-
-    <!-- Modal -->
+    <!-- add city modal  -->
     <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-        aria-labelledby="staticBackdropLabel" aria-hidden="true">
+        aria-labelledby="staticBackdropLabel" aria-hidden="true"> modal starts here
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -27,59 +21,36 @@
             </div>
         </div>
     </div>
-
-
-
-    <!-- Modal -->
-    <!-- <div class="modal fade" id="exampleModalcomment" tabindex="-1" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Comment</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <textarea class="form-control" v-model="body" id="add_comment" cols="30"
-                        rows="10"></textarea>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" v-on:click="vue_save_comment(post)" data-bs-dismiss="modal" class="btn btn-primary">Save comment</button>
-                </div>
-            </div>
-        </div>
-    </div> -->
-
-
-
-
-
+    <!-- new post form -->
     <div class="col" id="new_post">
         <div class="form-group">
             <label for="new_post_form"></label>
             <input type="title" class="form-control" v-model="title" id="new_post_form" placeholder="What's happening?">
         </div>
-        <textarea class="form-control" v-model="text" id="exampleFormControlTextarea1" rows="3"></textarea>
-        <select class="form-select form-select-sm" v-model="city_id" aria-label=".form-select-sm example">
+        <textarea class="form-control" v-model="text" id="FormControlTextarea1" rows="3"></textarea>
+        <select class="form-select form-select-sm" v-model="city_id" aria-label=".form-select-sm ">
             <option value="" disabled selected>Select a City</option>
             <option v-for="city in cities" placeholder="What's happening?" v-bind:value="city.id">[[city.name]]</option>
         </select>
         <input class="form-control form-control-sm" id="post_image" type="file" accept="image/*" />
         <input type="datetime-local" class="form-control" id="scheduled_date" v-model="scheduled_date">
         <div class="d-flex justify-content-evenly" id="new_postbtns">
-            <button type="button" v-on:click="post_new" class="btn btn-primary">Send it</button>
+            <button type="button" v-on:click="postNew" class="btn btn-primary">Send it</button>
+            <!-- button triggers add city modal to open -->
             <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
                 Add a City
             </button>
         </div>
         <div class=" container row mt-1">
-            <select class="form-select form-select-sm" v-model="city_sort" aria-label=".form-select-sm example">
+            <!-- select dropdown for selecting a city to assign to the post -->
+            <select class="form-select form-select-sm" v-model="city_sort" aria-label=".form-select-sm ">
                 <option value="" disabled selected>Select a City</option>
                 <option v-for="city in cities" v-bind:value="city.id">[[city.name]]</option>
             </select>
             <button type="button" v-on:click="postIndex" class="btn btn-light ">sort by city</button>
         </div>
     </div>
+    <!-- main post bodies start here -->
     <div class="container m-o mt-1" id="card" data-aos="fade-up" data-aos-duration="3000" v-for="post in vue_posts"
         style="width: 100%;">
         <img v-bind:src="post.post_image" class="card-img-top mt-1" alt="...">
@@ -94,26 +65,29 @@
                 [[post.text]]
             </p>
             <hr>
+            <!-- checking if the user is authenticated before allowing liking and attending -->
             {% if user.is_authenticated %}
             <div class="d-flex justify-content-evenly">
-                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
-                    data-bs-target="#exampleModalcomment">
+                <!-- button prompts modal to open for commenting -->
+                <button type="button" class="btn btn-primary" v-on:click="commented_post_id = post.id" data-bs-toggle="modal"
+                    data-bs-target="#Modalcomment">
                     Add a comment
                 </button>
                 <button type='button' class="btn btn-floating mb-1" data-mdb-ripple-color="dark"
                     v-on:click="likePost(post)">[[post.liked? '👎': '👍' ]]</button>
                 <button type='button' class='btn btn-floatin mb-1' data-mdb-ripple-color='dark'
-                    v-on:click="attending(post)">🧗</button>
+                    v-on:click="Attending(post)">🧗</button>
             </div>
             {% endif %}
+            <!-- displaying the posts comments and likes -->
             <div class="card-text d-flex justify-content-evenly">
                 <div>comments</div>
                 <div>Likes-[[post.likes]]</div>
                 <div>attendants-[[post.attendants.join(', ')]]</div>
             </div>
             <hr>
-
-            <div class="accordion accordion-flush" id="accordionFlushExample">
+            <!-- single accordian for the posts comments -->
+            <div class="accordion accordion-flush" id="accordionFlush">
                 <div class="accordion-item">
                     <h2 class="accordion-header" id="flush-headingOne">
                         <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse"
@@ -122,7 +96,7 @@
                         </button>
                     </h2>
                     <div id="flush-collapseOne" class="accordion-collapse collapse" aria-labelledby="flush-headingOne"
-                        data-bs-parent="#accordionFlushExample">
+                        data-bs-parent="#accordionFlush">
                         <div class="accordion-body" v-for="(comment, index) in comments" v-if="comment.post == post.id">
                             <h1>[[comment.author]]</h1>
                             <p>[[ comment.body ]]</p>
@@ -133,32 +107,26 @@
             </div>
         </div>
     </div>
-</div>
-
-
-<div class="modal fade" id="exampleModalcomment" tabindex="-1" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
+    <!-- modal for commenting -->
+    <div class="modal fade" id="Modalcomment" tabindex="-1" aria-labelledby="ModalLabel"
+    aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Comment</h5>
+                    <h5 class="modal-title" id="ModalLabel">Comment</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <textarea class="form-control" v-model="body" id="add_comment" cols="30"
-                        rows="10"></textarea>
+                    rows="10"></textarea>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" v-on:click="vue_save_comment(post)" data-bs-dismiss="modal" class="btn btn-primary">Save comment</button>
+                    <button type="button" v-on:click="vueSaveComment" data-bs-dismiss="modal" class="btn btn-primary">Save comment</button>
                 </div>
             </div>
         </div>
     </div>
-
-
-
-
-
+</div>
 <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
@@ -172,6 +140,7 @@
             title: '',
             body: '',
             comments: [],
+            commented_post_id: 0,
             modal: null,
             attendees: '',
             likes: '',
@@ -193,23 +162,17 @@
                 }).then(response => {
                     if (this.city_sort) {
                         this.vue_posts = response.data.posts.filter(post => this.city_sort === post.city_id)
-                        console.log(response.data.scheduled_date)
-                        // console.log(this.vue_posts)
-
                     }
                     else {
                         this.vue_posts = response.data.posts
                     }
-                    console.log(this.city_sort, 'city_sort')
                 })
             },
-            vue_comments: function () {
+            vueComments: function () {
                 axios({
                     url: "{% url 'climbupApp:load_comments' %}",
                     method: 'get',
-
                 }).then(response => {
-                    console.log(response.data)
                     this.comments = response.data.comments
                 })
             },
@@ -224,7 +187,6 @@
                         "X-CSRFToken": "{{ csrf_token }}"
                     }
                 }).then(response => {
-                    // console.log(response.data)
                     this.getCities()
                 })
             },
@@ -236,15 +198,12 @@
                         post_id: post.id
                     }
                 }).then(response => {
-                    // update the post with info from the api
                     this.likes = response.data.likes
                     this.postIndex()
-                    this.vue_comments()
-
-
+                    this.vueComments()
                 })
             },
-            attending: function (post) {
+            Attending: function (post) {
                 axios({
                     url: "{% url 'climbupApp:attendants'%}",
                     method: 'get',
@@ -252,11 +211,8 @@
                         post_id: post.id
                     }
                 }).then(response => {
-                    // console.log(response)
                     post.attendees = response.data.attendees
                     console.log(this.attendees, 'this.attendees')
-                    // console.log(response.data.attendees, 'response.data.attendees')
-                    // console.log('connected')
                     this.postIndex()
                 })
             },
@@ -266,18 +222,17 @@
                     method: 'get',
                 }).then(response => {
                     this.cities = response.data.cities
-                    // console.log(response.data)
-
                 })
             },
-            vue_save_comment: function (post) {
+            vueSaveComment: function () {
+                console.log(this.commented_post_id)
                 let form_data = new FormData()
                 form_data.append('body', this.body)
                 axios({
                     url: "{% url 'climbupApp:save_comment'%}",
                     method: "post",
                     params:{
-                        post_id: post.id
+                        post_id: this.commented_post_id
                     },
                     data: form_data,
                     headers: {
@@ -285,16 +240,17 @@
                     }
                 }).then(response => {
                     console.log(response)
+                    this.vueComments()
+                    this.body = ''
                 })
             },
-            post_new: function () {
+            postNew: function () {
                 let form_data = new FormData()
                 let post_image = document.querySelector('#post_image')
                 form_data.append('post_image', post_image.files[0])
                 form_data.append('text', this.text)
                 form_data.append('title', this.title)
                 form_data.append('city_id', this.city_id)
-                // form_data.append('author', this.author)
                 form_data.append('attendees', this.attendees)
                 form_data.append('likes', this.likes)
                 form_data.append('created_date', this.created_date)
@@ -303,12 +259,10 @@
                     url: "{% url 'climbupApp:post_new' %}",
                     method: "post",
                     data: form_data,
-
                     headers: {
                         "X-CSRFToken": "{{ csrf_token }}"
                     }
                 }).then(response => {
-                    // console.log(response.data)
                     this.text = ''
                     this.title = ''
                     this.scheduled_date = ''
@@ -317,21 +271,17 @@
                     this.postIndex()
                 })
             },
-            open_modal: function () {
+            openModal: function () {
                 this.modal.show()
                 console.log('it works')
-
-
             }
-
         },
         created: function () {
             AOS.init()
             this.modal = new bootstrap.Modal(document.querySelector('.modal'), {})
             this.postIndex()
             this.getCities()
-            this.vue_comments()
-
+            this.vueComments()
         },
     })
 </script>

@@ -14,7 +14,6 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 
 
-
 def index(request):# renders the homepage with all posts
     return render(request, 'climbupApp/index.html')
 
@@ -41,25 +40,22 @@ def load_posts(request):# provides the data to be rendered on the home page
         })
     return JsonResponse({'posts': post_data,})
 
+
 def profile_page(request): #page to render 
     return render(request, 'climbupApp/profile_page.html' )
 
 
 def load_comments(request):
-    comments = Comment.objects.all().order_by('-created_on')
+    comments = Comment.objects.all().order_by('-created_on') # getting comments out of the database and ordering by most recent
     comment_data = []
-    for comment in comments:
+    for comment in comments: # iterating over comment data, converting into dictionaries and returning JSON response 
         comment_data.append({
             'post':comment.post.id,
             'author': comment.author.username,
             'body': comment.body,
             'created_on': comment.created_on.strftime('%b %d %Y'),
-
         })
     return JsonResponse({'comments': comment_data})
-
-
-
 
 
 def profile_load(request):
@@ -92,7 +88,6 @@ def login_page(request):
     return render(request, 'climbupApp/login_page.html')
 
 
-
 def register(request):
     if request.method == 'POST':
         form = UserRegisterForm(request.POST, request.FILES)
@@ -109,6 +104,7 @@ def register(request):
     else:
         form = UserRegisterForm()
     return render(request, 'climbupApp/register.html', {'form': form})
+
 
 def logout_user(request):
     logout(request)
@@ -132,20 +128,17 @@ def post_new(request):
     post.save()
     return HttpResponse('saved')
 
+
 def save_comment(request):
     post_id = request.GET['post_id']
-    print(post_id, 'post_id')
     tz = get_current_timezone()
     comment = Comment(
-    comment_body = request.POST['comment_body'],
+    post = Post.objects.get(id=post_id),
+    body = request.POST['body'],
     author = request.user,
     )
     comment.save()
     return HttpResponse('commented')
-
-# We will have to use post as a parameter, similar to likes I think
-# front end should be fine now, lets set up back end later today.
-
 
 
 def get_cities(request):
@@ -158,6 +151,7 @@ def get_cities(request):
         })
     return JsonResponse({'cities': city_data})
 
+
 def add_city(request): # assigning data to variables for saving to database
     city_name = request.POST['city_add']
     city = City(
@@ -165,6 +159,7 @@ def add_city(request): # assigning data to variables for saving to database
     )
     city.save()
     return HttpResponse('city added')
+
 
 @login_required()
 def like_post(request):
@@ -181,7 +176,8 @@ def like_post(request):
     likes = post.likes.count()
     response = { 'likes': likes, 'liked_by': liked_by}
     return JsonResponse(response)
-    
+
+
 @login_required()
 def attendants(request):
     post_id = request.GET['post_id'] #getting the post object of attended post
@@ -200,6 +196,7 @@ def attendants(request):
     response = {'attendees': attendee_data, 'attended_by': attended_by} #assigning data to a dictionary and returning it in the json response.
     return JsonResponse(response)
     
+
 @login_required
 def post_edit(request):
     post_id = int(request.POST.get('post_id')) # getting the post id out
@@ -212,6 +209,7 @@ def post_edit(request):
     post.save() # resaving the post to the database
     return HttpResponse('edited') # returning a confirmation response
     
+
 @login_required
 def delete_post(request):
     delete_post_id = int(request.POST.get('post_id')) # getting the post id out of the response

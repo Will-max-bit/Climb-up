@@ -4,15 +4,11 @@ from django.conf import settings
 from django.contrib.auth.models import User
 
 
-# Create your models here.
-
-
 class City(models.Model):
     name = models.CharField(max_length=50)
 
     def __str__(self):
         return self.name
-    
 
 
 class Post(models.Model):
@@ -43,5 +39,5 @@ class Comment(models.Model):
         ordering = ['created_on']
     
     def __str__(self):
-        return 'Comment {} by {}'. format(self.body, self.name)
+        return 'Comment {} by {}'. format(self.body, self.author)
     
