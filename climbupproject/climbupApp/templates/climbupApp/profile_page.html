@@ -1,10 +1,9 @@
 {% extends 'climbupApp/base.html'%}
+<!-- loading stying and navbar from base & using crispy forms for standardized login info -->
 {% block content %}
 
 <div id="app" class="container ">
-
-
-    <!-- Modal -->
+    <!-- Modal for editing post-->
   <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -30,6 +29,7 @@
       </div>
     </div>
   </div>
+  <!-- beginning of user's profile posts  -->
     <h1 class="text-center" >Your Profile</h1>
     <div class="container m-o my-1" id="card" v-for="post in profile_posts" style="width: 100%;">
         <img v-bind:src="[[post.post_image]]" id="post_image" class="card-img-top" alt="...">
@@ -38,13 +38,13 @@
             <div>Location- [[post.city]]</div>
             <div>posted- [[post.created_date]]</div>
             <hr>
-            
             <h5 class="card-title">[[post.title]]</h5>
             <p class="card-text">
                 [[post.text]]
                 [[post.id]]
             </p>
         </div>
+        <!-- if user is logged in the ability to edit posts is rendered -->
       {% if user.is_authenticated %}
       <div class="d-flex justify-content-evenly">
             <button type="button" class="btn btn-primary mb-1" v-on:click="editing_post = {...post}" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
@@ -57,15 +57,9 @@
         {% endif %}
     </div>
 </div>
-
-
 <script src="https://cdn.jsdelivr.net/npm/vue@2.6.12/dist/vue.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
 <script>
-    // 1) add a 'editing_post' to your data (initially an object with blank properties {'title': ''})
-    // 2) when the user clicks the 'edit post' button assign that post to editing_post
-    // 3) use editing_post to populate the fields of the modal
-    // 4) when the user hits 'submit', put the values of editing_post in the form data
     let app = new Vue({
         el: '#app',
         delimiters: ['[[', ']]'],
@@ -86,18 +80,18 @@
             scheduled_date: '',
         },
         methods: {
+          // function for rendering posts of user
             postIndex: function () {
                 axios({
                     url: "{% url 'climbupApp:profile_load' %}",
                     method: 'get',
                 }).then(response => {
                     this.profile_posts = response.data.profile_posts
-                    // console.log(this.profile_posts)
                     this.getCities()
                 })
             },
             post_edit: function(){
-              console.log(this.editing_post.created_date)
+              // collecting data from edited post for saving to database
               let form_data = new FormData()
               let post_image = document.querySelector('#post_image')
               form_data.append('post_image', post_image.files[0])
@@ -106,7 +100,6 @@
               form_data.append('author', this.editing_post.author)
               form_data.append('title', this.editing_post.title)
               form_data.append('city_id', this.editing_post.city_id)
-          
               form_data.append('scheduled_date', this.editing_post.scheduled_date)
               axios({
                 url: "{% url 'climbupApp:post_edit' %}",
@@ -118,19 +111,19 @@
               }).then(response => {
                 console.log(form_data)
                 this.postIndex()
-
               })
             },
             getCities: function () {
+              // city function allows the user to edit the city of their post
                 axios({
                     url: "{% url 'climbupApp:get_cities' %}",
                     method: 'get',
                 }).then(response => {
                     this.cities = response.data.cities
-                    // console.log(response.data)
                 })
             },
             delete_item: function(post){
+              // collects the relevant post data, sends back to the database for deletion
               let form_data = new FormData()
               form_data.append('post_id', post.id)
               axios({
@@ -153,4 +146,3 @@
     })
 </script>
 {% endblock %}
-<!-- once the function hits axios it fails -->
