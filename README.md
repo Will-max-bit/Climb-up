@@ -33,7 +33,7 @@ ClimbUp will be a social media app focusing on sharing climbing information, sch
 * City
   * name (charfield)
 * Post
-  * title (charfiel)
+  * title (charfield)
   * text (textfield)
   * city (foreignkey to City)
   * author (foreignkey to User)
