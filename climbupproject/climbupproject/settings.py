@@ -26,7 +26,7 @@ SECRET_KEY = '6v_vi&$-eebkg6)vo2*zabktw$c+o-s36ps67_ht*^@s)t&%^#'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['https://willclimbup.herokuapp.com/']
+ALLOWED_HOSTS = ['willclimbup.herokuapp.com/']
 
 
 # Application definition
