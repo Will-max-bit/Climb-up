@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = '6v_vi&$-eebkg6)vo2*zabktw$c+o-s36ps67_ht*^@s)t&%^#'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['https://willclimbup.herokuapp.com/']
 
 
 # Application definition
