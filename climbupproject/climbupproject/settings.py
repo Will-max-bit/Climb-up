@@ -125,3 +125,7 @@ STATIC_URL = '/static/'
 MEDIA_URL = '/uploaded_files/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'uploaded_files')
 CRISPY_TEMPLATE_PACK = 'bootstrap4'
+
+if 'DATABASE_URL' in os.environ:
+    import dj_database_url
+    DATABASES = {'default': dj_database_url.config()}
