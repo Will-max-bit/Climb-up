@@ -1,6 +1,6 @@
 # ClimbUp
 
-Repo for PDX Code guild captstone
+Repo for PDX Code guild Capstone project
 
 ## Overview
 ------
